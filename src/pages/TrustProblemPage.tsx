@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ShieldAlert, FileWarning, FlaskConical, Skull, FileX, QrCode, KeyRound, BadgeCheck, Database, Lock, Stamp } from "lucide-react";
+import { SignUpModal } from "@/components/SignUpModal";
 
 const problems = [
   { icon: FileWarning, title: "PDF Editing", body: "A fast and loose vendor harvests a clean COA from another vendor and edits the PDF to make it their own. Even watermarks can be removed or replaced with AI. The PDF metadata often still shows the original creation date from years ago. This is outright fraud, but it is not uncommon — especially with low-price vendors.", example: "We've seen the same COA used across 15+ suppliers with different batch numbers. The file properties showed it was created in 2019.", exampleLabel: "Real example:" },
@@ -192,7 +193,7 @@ const TrustProblemPage = () => (
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Ready for Testing You Can Actually Trust?</h2>
           <p className="text-muted-foreground text-lg mb-8">Join the vendors and suppliers who've moved beyond PDFs. Get results your customers can verify themselves — in seconds.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Button variant="hero" size="lg">Create Free Account</Button>
+            <SignUpModal trigger={<Button variant="hero" size="lg">Create Free Account</Button>} />
             <Button variant="outline" size="lg" asChild><Link to="/services">View Testing Services</Link></Button>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Check, DollarSign, Clock, ShieldCheck } from "lucide-react";
+import { SignUpModal } from "@/components/SignUpModal";
 
 const peptides = ["AICAR","AOD-9604","BPC-157","Cagrilintide","CJC-1295 (no DAC)","Delta Sleep-Inducing Peptide","Epitalon","Epithalon","GHK-Cu","GHRP-6","Hexarelin","IGF-1 LR3","Ipamorelin","Kisspeptin-10","KPV","Liraglutide","LL-37","Melanotan I","Melanotan II","MOTS-c","MTP 131","NAD+","Pinealon","PT-141","Retatrutide","Selank","Semaglutide","Semax","Sermorelin","SLU-PP-332","TB500 (17-23 Fragment)","TB500 (Thymosin Beta 4)","Tesamorelin","Testagen","Thymosin Alpha-1","Thymosin Beta-4","Thymulin","Tirzepatide","Triptorelin","VIP"];
 
@@ -167,7 +168,7 @@ const ServicesPage = () => (
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-muted-foreground text-lg mb-8">Create your free account and place your first order in minutes. No minimums, no contracts.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Button variant="hero" size="lg">Create Free Account</Button>
+            <SignUpModal trigger={<Button variant="hero" size="lg">Create Free Account</Button>} />
             <Button variant="outline" size="lg" asChild><Link to="/contact">Talk to Our Team</Link></Button>
           </div>
         </div>
