@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { Logo } from "./Logo";
 import { Menu, ShoppingCart, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SignUpModal } from "./SignUpModal";
 
 const links = [
   { label: "Home", href: "/" },
@@ -39,9 +40,14 @@ export const Header = () => {
           <Button variant="ghost" size="icon" className="rounded-full">
             <ShoppingCart className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full bg-secondary">
-            <User className="h-4 w-4" />
-          </Button>
+          <SignUpModal
+            defaultMode="signin"
+            trigger={
+              <Button variant="ghost" size="icon" className="rounded-full bg-secondary" aria-label="Account">
+                <User className="h-4 w-4" />
+              </Button>
+            }
+          />
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen(!open)}>
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
