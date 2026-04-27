@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Quote } from "lucide-react";
+import { SignUpModal } from "./SignUpModal";
 
 export const Testimonial = () => (
   <section className="py-24 md:py-32">
@@ -30,7 +31,7 @@ export const Testimonial = () => (
           <span className="font-bold text-warning">50% off</span>{" "}
           <span className="text-muted-foreground">your first sample — auto-applies at checkout</span>
         </p>
-        <Button size="lg" variant="hero">Create Free Account</Button>
+        <SignUpModal trigger={<Button size="lg" variant="hero">Create Free Account</Button>} />
       </div>
     </div>
   </section>

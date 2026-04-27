@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tag, ShieldCheck, Clock, MapPin } from "lucide-react";
 import heroImg from "@/assets/hero-lab.jpg";
+import { SignUpModal } from "./SignUpModal";
 
 export const Hero = () => {
   return (
@@ -30,7 +31,7 @@ export const Hero = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            <Button size="lg" variant="hero">Start Testing</Button>
+            <SignUpModal trigger={<Button size="lg" variant="hero">Start Testing</Button>} />
             <Button size="lg" variant="success" asChild><Link to="/verify">Verify a Report</Link></Button>
             <Button size="lg" variant="glass" asChild><a href="/verify-report/8Z8G-MRJB">See Example COA</a></Button>
           </div>
