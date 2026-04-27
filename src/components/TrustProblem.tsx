@@ -41,7 +41,7 @@ export const TrustProblem = () => (
           </ul>
         </div>
         <div className="rounded-2xl border border-accent/30 bg-accent/5 p-8 shadow-soft">
-          <div className="text-xs font-mono uppercase tracking-widest text-accent mb-2">The VeritaPep Way</div>
+          <div className="text-xs font-mono uppercase tracking-widest text-accent mb-2">The HelixAnalyticals Way</div>
           <h3 className="text-2xl font-bold mb-6">VeritaVerified COA</h3>
           <ul className="space-y-3">
             {newWay.map((t) => (
@@ -57,7 +57,7 @@ export const TrustProblem = () => (
       <div className="mt-16 max-w-5xl mx-auto rounded-3xl bg-gradient-verify border border-border p-8 md:p-12">
         <h3 className="text-2xl md:text-3xl font-bold text-center mb-8">The Verified Record — Plus a PDF for Your Files</h3>
         <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-10">
-          Every VeritaPep report lives at a unique, cryptographically signed URL — that's the authoritative record. We also generate the cleanest PDF COA in the industry for your archives and downstream distribution. Every order ships with both.
+          Every HelixAnalyticals report lives at a unique, cryptographically signed URL — that's the authoritative record. We also generate the cleanest PDF COA in the industry for your archives and downstream distribution. Every order ships with both.
         </p>
         <div className="grid md:grid-cols-[1fr_auto_1fr] gap-6 items-center">
           <CoaCard digital />
@@ -73,7 +73,7 @@ const CoaCard = ({ digital = false }: { digital?: boolean }) => (
   <div className="rounded-2xl bg-card border border-border p-6 shadow-soft">
     <div className="flex items-center justify-between mb-4">
       <div className="text-xs font-mono uppercase tracking-wider text-primary">
-        {digital ? "VeritaVerify™ Digital COA" : "PDF COA"}
+        {digital ? "HelixVerify™ Digital COA" : "PDF COA"}
       </div>
       <span className="text-xs font-bold text-accent">CONFORMS</span>
     </div>

@@ -15,7 +15,7 @@ export const Contact = () => {
           <div className="text-xs font-mono tracking-widest text-primary uppercase mb-4">Get in touch</div>
           <h2 className="text-4xl font-bold mb-3">We typically respond within a few hours.</h2>
           <p className="text-muted-foreground inline-flex items-center gap-2">
-            <Mail className="h-4 w-4" /> info@veritapep.labs
+            <Mail className="h-4 w-4" /> info@helixanalyticals.com
           </p>
         </div>
         {sent ? (
@@ -35,7 +35,7 @@ export const Contact = () => {
       </div>
       <footer className="container mt-24 pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4">
         <Logo />
-        <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} VeritaPep Labs. All rights reserved.</p>
+        <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} HelixAnalyticals. All rights reserved.</p>
       </footer>
     </section>
   );

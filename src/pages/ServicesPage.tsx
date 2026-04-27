@@ -91,10 +91,10 @@ const ServicesPage = () => (
               </div>
               <p className="text-xs text-muted-foreground mt-5 text-center">Add to Core Panel at checkout</p>
             </div>
-            {/* VeritaShield */}
+            {/* HelixShield */}
             <div className="rounded-2xl bg-gradient-primary text-white p-7 shadow-elegant relative overflow-hidden">
               <div className="absolute top-4 right-4 bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-bold">Best Value</div>
-              <h3 className="text-xl font-bold mb-1">VeritaShield Panel</h3>
+              <h3 className="text-xl font-bold mb-1">HelixShield Panel</h3>
               <p className="text-sm text-white/80 mb-5">Core + Full Biosafety Suite</p>
               <div className="mb-6">
                 <span className="text-white/60 line-through mr-2">$680</span>
