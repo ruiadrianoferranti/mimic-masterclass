@@ -137,7 +137,7 @@ const TrustProblemPage = () => (
         <div className="container max-w-5xl">
           <div className="text-center mb-12">
             <div className="text-xs font-mono tracking-widest text-primary uppercase mb-3">Side by Side</div>
-            <h2 className="text-3xl md:text-5xl font-bold">Traditional COA vs. VeritaVerified COA</h2>
+            <h2 className="text-3xl md:text-5xl font-bold">Traditional COA vs. HelixVerified COA</h2>
           </div>
           <div className="grid md:grid-cols-[1fr_auto_1fr] gap-6 items-stretch">
             <div className="rounded-2xl border border-destructive/30 bg-card p-7 shadow-soft">

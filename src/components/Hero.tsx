@@ -5,8 +5,8 @@ import heroImg from "@/assets/hero-lab.jpg";
 
 export const Hero = () => {
   return (
-    <section id="home" className="relative min-h-[92vh] flex flex-col justify-end pt-16">
-      <div className="absolute inset-0 -z-10">
+    <section id="home" className="relative min-h-[92vh] flex flex-col justify-end pt-16 overflow-hidden">
+      <div className="absolute inset-0 z-0">
         <img
           src={heroImg}
           alt="Peptide vials in a US-based laboratory"
@@ -14,16 +14,16 @@ export const Hero = () => {
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-foreground/30 to-foreground/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/40 to-slate-900/80" />
       </div>
 
-      <div className="container relative pb-20 pt-32">
+      <div className="container relative z-10 pb-20 pt-32">
         <div className="max-w-3xl">
           <h1 className="font-display text-5xl md:text-7xl font-extrabold leading-[1.05] mb-8 text-white">
             Peptide Testing, <span className="text-primary-foreground bg-clip-text" style={{ backgroundImage: "var(--gradient-primary)", WebkitBackgroundClip: "text", color: "transparent" }}>Verified.</span>
           </h1>
 
-          <div className="bg-foreground/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-7 mb-8 max-w-xl">
+          <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-7 mb-8 max-w-xl">
             <p className="text-base md:text-lg text-white/95 leading-relaxed">
               48-72 hour turnaround. Independent verification. Biosafety assays others omit. Built for suppliers who stake their reputation on accuracy.
             </p>
@@ -46,7 +46,7 @@ export const Hero = () => {
         </div>
       </div>
 
-      <div className="border-t border-border bg-card">
+      <div className="relative z-10 border-t border-border bg-card">
         <div className="container grid grid-cols-1 md:grid-cols-3 gap-6 py-7">
           <Stat icon={ShieldCheck} label="ISO 17025" sub="Pending" />
           <Stat icon={Clock} label="48-72 Hour" sub="Standard TAT" />
