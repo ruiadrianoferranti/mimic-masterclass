@@ -5,7 +5,8 @@ import { Pillars } from "@/components/Pillars";
 import { BusinessCase } from "@/components/BusinessCase";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Testimonial } from "@/components/Testimonial";
-import { Contact } from "@/components/Contact";
+import { ContactForm } from "@/components/ContactForm";
+import { Footer } from "@/components/Footer";
 
 const Index = () => (
   <div className="min-h-screen bg-background">
@@ -17,8 +18,9 @@ const Index = () => (
       <BusinessCase />
       <HowItWorks />
       <Testimonial />
-      <Contact />
+      <ContactForm />
     </main>
+    <Footer />
   </div>
 );
 
