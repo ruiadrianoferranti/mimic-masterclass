@@ -20,7 +20,7 @@ const fails = [
 ];
 
 const layers = [
-  { n: 1, icon: Database, title: "Live-Rendered Results", body: "Your results don't exist as a file. They're rendered live from our Laboratory Information Management System (LIMS) every time someone views them. There's no PDF to edit, no file to swap, no document to forge.", how: "Each report has a unique URL (e.g., verify.veritapeplabs.com/VPL-2024-08291). When you visit that URL, our system queries the database and renders the current, authoritative data. The 'document' is the database — not a copy of it.", howLabel: "How it works" },
+  { n: 1, icon: Database, title: "Live-Rendered Results", body: "Your results don't exist as a file. They're rendered live from our Laboratory Information Management System (LIMS) every time someone views them. There's no PDF to edit, no file to swap, no document to forge.", how: "Each report has a unique URL (e.g., verify.helixanalyticals.com/VPL-2024-08291). When you visit that URL, our system queries the database and renders the current, authoritative data. The 'document' is the database — not a copy of it.", howLabel: "How it works" },
   { n: 2, icon: Lock, title: "Cryptographic Signing", body: "When we finalize a result, we cryptographically hash the data and sign it. This creates a permanent, immutable timestamp that proves the data existed in its current form at a specific moment.", how: "Even if someone compromised our database, they couldn't alter historical results without the hash mismatch being immediately detectable. The signature proves the data hasn't changed.", howLabel: "What this means" },
   { n: 3, icon: Stamp, title: "Physical Serialization", body: "For premium testing tiers, we provide tamper-evident seals with unique serial numbers that link the physical vial to its digital record. Scan the QR, see the results — and know that seal hasn't been transferred.", how: "Your customers can verify in seconds. Scan the code, see the live data, check the cryptographic signature. No PDFs. No 'trust us.' Just proof.", howLabel: "The result" },
 ];
@@ -103,7 +103,7 @@ const TrustProblemPage = () => (
       <section className="py-24">
         <div className="container max-w-5xl">
           <div className="text-center mb-14">
-            <div className="text-xs font-mono tracking-widest text-primary uppercase mb-3">The VeritaPep Approach</div>
+            <div className="text-xs font-mono tracking-widest text-primary uppercase mb-3">The HelixAnalyticals Approach</div>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">A Three-Layer Security Stack</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">We didn't just build a better PDF. We built a system where fraud is mathematically impossible — not just difficult.</p>
           </div>
@@ -161,11 +161,11 @@ const TrustProblemPage = () => (
             </div>
             <div className="flex items-center justify-center font-display text-2xl text-muted-foreground">vs</div>
             <div className="rounded-2xl border border-accent/30 bg-card p-7 shadow-elegant">
-              <div className="text-xs font-mono uppercase tracking-widest text-accent mb-2">VeritaPep Verification</div>
+              <div className="text-xs font-mono uppercase tracking-widest text-accent mb-2">HelixAnalyticals Verification</div>
               <h3 className="text-xl font-bold mb-5">Live-Rendered Result</h3>
               <div className="space-y-3 text-sm">
                 {[
-                  ["VeritaPep Labs", "✓ Verified"],
+                  ["HelixAnalyticals", "✓ Verified"],
                   ["Report ID", "VPL-2024-08291"],
                   ["Compound", "BPC-157"],
                   ["Purity", "98.7%"],

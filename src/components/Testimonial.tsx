@@ -8,7 +8,7 @@ export const Testimonial = () => (
         <div className="relative">
           <Quote className="absolute -top-6 -left-2 h-16 w-16 text-primary/15" />
           <blockquote className="relative text-2xl md:text-3xl font-display font-medium leading-snug">
-            "VeritaPep cut our testing cycle from 18 days to 3. That's real money back in our operation — and our customers actually scan the verification codes."
+            "HelixAnalyticals cut our testing cycle from 18 days to 3. That's real money back in our operation — and our customers actually scan the verification codes."
           </blockquote>
           <div className="mt-6 text-sm">
             <div className="font-semibold">Operations Director</div>

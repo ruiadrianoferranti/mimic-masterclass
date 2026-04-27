@@ -11,9 +11,9 @@ export const Pillars = () => (
   <section id="services" className="py-24 md:py-32 bg-secondary/30 border-y border-border">
     <div className="container">
       <div className="text-center mb-16">
-        <div className="text-xs font-mono tracking-widest text-primary uppercase mb-4">Why VeritaPep</div>
+        <div className="text-xs font-mono tracking-widest text-primary uppercase mb-4">Why HelixAnalyticals</div>
         <h2 className="text-4xl md:text-5xl font-bold mb-4">Three Pillars of Better Testing</h2>
-        <p className="text-muted-foreground max-w-xl mx-auto">We built VeritaPep around what actually matters to your business.</p>
+        <p className="text-muted-foreground max-w-xl mx-auto">We built HelixAnalyticals around what actually matters to your business.</p>
       </div>
       <div className="grid md:grid-cols-3 gap-6">
         {pillars.map((p) => (

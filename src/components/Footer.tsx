@@ -22,7 +22,7 @@ export const Footer = () => (
       <div>
         <h4 className="font-semibold mb-3 text-sm">Contact</h4>
         <ul className="space-y-2 text-sm text-muted-foreground">
-          <li>info@veritapeplabs.com</li>
+          <li>info@helixanalyticals.com</li>
           <li>US-based laboratory</li>
           <li>ISO 17025 Pending</li>
         </ul>
@@ -30,8 +30,8 @@ export const Footer = () => (
     </div>
     <div className="border-t border-border">
       <div className="container py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-        <p>© {new Date().getFullYear()} VeritaPep Labs. All rights reserved.</p>
-        <p>VeritaVerify™ is a trademark of VeritaPep Labs.</p>
+        <p>© {new Date().getFullYear()} HelixAnalyticals. All rights reserved.</p>
+        <p>HelixVerify™ is a trademark of HelixAnalyticals.</p>
       </div>
     </div>
   </footer>

@@ -31,7 +31,7 @@ const VerifyPage = () => {
               <div className="h-16 w-16 rounded-2xl bg-gradient-primary flex items-center justify-center mx-auto mb-6 shadow-glow">
                 <ShieldCheck className="h-8 w-8 text-white" />
               </div>
-              <h1 className="text-3xl md:text-5xl font-bold mb-4">Verify VeritaPep Certificate</h1>
+              <h1 className="text-3xl md:text-5xl font-bold mb-4">Verify HelixAnalyticals Certificate</h1>
               <p className="text-muted-foreground">Enter the verification code from your Certificate of Analysis to confirm its authenticity.</p>
             </div>
             <form onSubmit={handleSubmit} className="rounded-2xl bg-card border border-border p-8 shadow-elegant space-y-4">

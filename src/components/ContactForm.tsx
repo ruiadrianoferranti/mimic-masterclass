@@ -12,7 +12,7 @@ export const ContactForm = () => {
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">Get in touch</h2>
           <p className="text-muted-foreground inline-flex items-center gap-2">
-            <Mail className="h-4 w-4" /> info@veritapeplabs.com — we typically respond within a few hours.
+            <Mail className="h-4 w-4" /> info@helixanalyticals.com — we typically respond within a few hours.
           </p>
         </div>
         {sent ? (

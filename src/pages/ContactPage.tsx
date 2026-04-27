@@ -18,7 +18,7 @@ const ContactPage = () => (
       <section className="py-16">
         <div className="container max-w-4xl grid md:grid-cols-3 gap-5">
           {[
-            { icon: Mail, t: "Email", v: "info@veritapeplabs.com" },
+            { icon: Mail, t: "Email", v: "info@helixanalyticals.com" },
             { icon: Clock, t: "Response Time", v: "Within 4 business hours" },
             { icon: MapPin, t: "Laboratory", v: "United States" },
           ].map((c) => (
