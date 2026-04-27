@@ -6,7 +6,7 @@ export const Testimonial = () => (
     <div className="container max-w-5xl">
       <div className="grid md:grid-cols-2 gap-12 items-center">
         <div className="relative">
-          <Quote className="absolute -top-6 -left-2 h-16 w-16 text-primary/20" />
+          <Quote className="absolute -top-6 -left-2 h-16 w-16 text-primary/15" />
           <blockquote className="relative text-2xl md:text-3xl font-display font-medium leading-snug">
             "VeritaPep cut our testing cycle from 18 days to 3. That's real money back in our operation — and our customers actually scan the verification codes."
           </blockquote>
@@ -22,7 +22,8 @@ export const Testimonial = () => (
           <Stat value="0" label="Customs delays" />
         </div>
       </div>
-      <div className="mt-20 rounded-3xl bg-gradient-card border border-primary/30 p-10 md:p-14 text-center shadow-glow">
+
+      <div className="mt-20 rounded-3xl bg-card border border-primary/20 p-10 md:p-14 text-center shadow-elegant">
         <h3 className="text-3xl md:text-4xl font-bold mb-4">Ready to get started?</h3>
         <p className="text-muted-foreground text-lg mb-2">Create your free account and submit your first order in minutes.</p>
         <p className="text-sm mb-8">
@@ -36,7 +37,7 @@ export const Testimonial = () => (
 );
 
 const Stat = ({ value, label }: { value: string; label: string }) => (
-  <div className="rounded-xl border border-border bg-card/40 p-6">
+  <div className="rounded-xl border border-border bg-card p-6 shadow-soft">
     <div className="font-display text-3xl font-bold text-gradient">{value}</div>
     <div className="text-sm text-muted-foreground mt-1">{label}</div>
   </div>

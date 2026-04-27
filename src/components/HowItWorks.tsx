@@ -8,16 +8,16 @@ const steps = [
 ];
 
 export const HowItWorks = () => (
-  <section className="py-24 md:py-32 bg-card/30 border-y border-border/50">
+  <section id="how-it-works" className="py-24 md:py-32 bg-secondary/30 border-y border-border">
     <div className="container">
       <div className="text-center mb-16 max-w-3xl mx-auto">
         <div className="text-xs font-mono tracking-widest text-primary uppercase mb-4">How It Works</div>
-        <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">From sign-up to verified results in 48-72 hours.</h2>
+        <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">From Sign-Up to Verified Results in 48-72 Hours</h2>
         <p className="text-muted-foreground text-lg">Fully self-serve. No quotes, no back-and-forth, no waiting on sales calls.</p>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
         {steps.map((s) => (
-          <div key={s.n} className="relative rounded-2xl bg-gradient-card border border-border p-6 hover:border-primary/40 transition-colors">
+          <div key={s.n} className="relative rounded-2xl bg-card border border-border p-6 hover:border-primary/40 transition-colors shadow-soft">
             <div className="flex items-baseline justify-between mb-4">
               <span className="font-display text-5xl font-bold text-gradient">{s.n}</span>
               <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">{s.tag}</span>
