@@ -1,4 +1,5 @@
 import { useState, ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ export const SignUpModal = ({ trigger, defaultMode = "signup" }: Props) => {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"signup" | "signin">(defaultMode);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -58,6 +60,7 @@ export const SignUpModal = ({ trigger, defaultMode = "signup" }: Props) => {
       description: mode === "signup" ? "Check your email to confirm. 50% off applied to your first sample." : "You're signed in.",
     });
     setOpen(false);
+    navigate("/dashboard");
   };
 
   return (
