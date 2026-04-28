@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,6 @@ import {
   Mail,
   Building2,
   ShieldCheck,
-  Sparkles,
   ArrowRight,
 } from "lucide-react";
 
@@ -49,7 +48,6 @@ const statusStyles: Record<string, string> = {
 };
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   // Demo user (replace with auth user when backend is connected)
   const user = {
     firstName: "Alex",
@@ -143,23 +141,6 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
 
-              {/* Custom quote CTA */}
-              <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-accent/10">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    Other Products
-                  </CardTitle>
-                  <CardDescription>
-                    Need to test something not listed in our standard catalog? Request a custom quote and our team will tailor an analysis to your sample.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="hero" className="w-full" onClick={() => navigate("/contact")}>
-                    Request Custom Quote
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Check, DollarSign, Clock, ShieldCheck } from "lucide-react";
+import { Check, DollarSign, Clock, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
 import { SignUpModal } from "@/components/SignUpModal";
 
 const peptides = ["AICAR","AOD-9604","BPC-157","Cagrilintide","CJC-1295 (no DAC)","Delta Sleep-Inducing Peptide","Epitalon","Epithalon","GHK-Cu","GHRP-6","Hexarelin","IGF-1 LR3","Ipamorelin","Kisspeptin-10","KPV","Liraglutide","LL-37","Melanotan I","Melanotan II","MOTS-c","MTP 131","NAD+","Pinealon","PT-141","Retatrutide","Selank","Semaglutide","Semax","Sermorelin","SLU-PP-332","TB500 (17-23 Fragment)","TB500 (Thymosin Beta 4)","Tesamorelin","Testagen","Thymosin Alpha-1","Thymosin Beta-4","Thymulin","Tirzepatide","Triptorelin","VIP"];
@@ -143,6 +143,29 @@ const ServicesPage = () => (
           </div>
           <div className="mt-8 text-center text-sm text-muted-foreground">
             Showing <strong>{peptides.length}</strong> peptides · Full catalog includes 78
+          </div>
+
+          {/* Other Products — Custom Quote */}
+          <div className="mt-12 rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/10 via-background to-accent/10 p-8 md:p-10 shadow-soft">
+            <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary mb-3">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Beyond Peptides
+                </div>
+                <h3 className="font-display text-2xl md:text-3xl font-bold mb-2">
+                  Testing Other Products? Request a Custom Quote.
+                </h3>
+                <p className="text-muted-foreground max-w-2xl">
+                  We don't only test peptides. If your sample isn't in the catalog above — small molecules, biologics, raw materials, or specialty compounds — our team will tailor an analytical method and quote to your needs.
+                </p>
+              </div>
+              <div className="shrink-0">
+                <Button variant="hero" size="lg" asChild>
+                  <Link to="/contact">Request Custom Quote <ArrowRight className="h-4 w-4" /></Link>
+                </Button>
+              </div>
+            </div>
           </div>
 
           <div className="mt-16">

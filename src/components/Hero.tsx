@@ -36,14 +36,18 @@ export const Hero = () => {
             <Button size="lg" variant="glass" asChild><a href="/verify-report/8Z8G-MRJB">See Example COA</a></Button>
           </div>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-warning/60 bg-warning/15 backdrop-blur px-4 py-2">
-            <Tag className="h-4 w-4 text-warning" />
-            <span className="text-sm text-white">
-              <span className="font-bold text-warning">50% OFF</span>{" "}
-              <span className="text-white/90">your first sample —</span>{" "}
-              <a href="#" className="underline underline-offset-2 hover:text-warning transition-colors">claim now</a>
-            </span>
-          </div>
+          <SignUpModal
+            trigger={
+              <button className="inline-flex items-center gap-2 rounded-full border border-warning/60 bg-warning/15 backdrop-blur px-4 py-2 hover:bg-warning/25 transition-colors cursor-pointer">
+                <Tag className="h-4 w-4 text-warning" />
+                <span className="text-sm text-white">
+                  <span className="font-bold text-warning">50% OFF</span>{" "}
+                  <span className="text-white/90">your first sample —</span>{" "}
+                  <span className="underline underline-offset-2 hover:text-warning transition-colors">claim now</span>
+                </span>
+              </button>
+            }
+          />
         </div>
       </div>
 

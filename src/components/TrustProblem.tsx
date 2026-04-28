@@ -115,7 +115,7 @@ const DigitalCoa = ({ expanded = false }: { expanded?: boolean }) => (
 
     <div className={`p-5 ${expanded ? "p-8" : ""}`}>
       <div className="text-base font-bold mb-1">TB500 (17-23 Fragment)</div>
-      <div className="text-xs text-muted-foreground mb-4">Peptide Manufacturer Brand · TB10 · LOT TB10HYBCBC</div>
+      <div className="text-xs text-muted-foreground mb-4">Manufacturer Brand · TB10 · LOT TB10HYBCBC</div>
 
       <div className="grid grid-cols-3 gap-2 text-xs mb-4">
         <Metric label="Purity" value="99.77%" />
@@ -194,7 +194,7 @@ const PdfCoa = ({ expanded = false }: { expanded?: boolean }) => (
       {/* Info grid */}
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px] mb-4">
         <Row label="Lot Number" value="TB10HYBCBC" />
-        <Row label="Manufacturer" value="Peptide Manufacturer Brand" />
+        <Row label="Manufacturer" value="Manufacturer Brand" />
         <Row label="Sample ID" value="TB10" />
         <Row label="Test Date" value="2025-04-12" />
         <Row label="Report ID" value="8Z8G-MRJB" />
