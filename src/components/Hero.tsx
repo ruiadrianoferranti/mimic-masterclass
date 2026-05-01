@@ -1,8 +1,55 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tag, ShieldCheck, Clock, MapPin } from "lucide-react";
 import heroImg from "@/assets/hero-lab.jpg";
 import { SignUpModal } from "./SignUpModal";
+
+const isLoggedIn = () => !!localStorage.getItem("helix_user");
+
+const StartTestingButton = () => {
+  const navigate = useNavigate();
+  if (isLoggedIn()) {
+    return (
+      <Button size="lg" variant="hero" onClick={() => navigate("/services")}>
+        Start Testing
+      </Button>
+    );
+  }
+  return <SignUpModal trigger={<Button size="lg" variant="hero">Start Testing</Button>} />;
+};
+
+const OfferBanner = () => {
+  const navigate = useNavigate();
+  if (isLoggedIn()) {
+    return (
+      <button
+        onClick={() => navigate("/services")}
+        className="inline-flex items-center gap-2 rounded-full border border-warning/60 bg-warning/15 backdrop-blur px-4 py-2 hover:bg-warning/25 transition-colors cursor-pointer"
+      >
+        <Tag className="h-4 w-4 text-warning" />
+        <span className="text-sm text-white">
+          <span className="font-bold text-warning">50% OFF</span>{" "}
+          <span className="text-white/90">your first sample —</span>{" "}
+          <span className="underline underline-offset-2 hover:text-warning transition-colors">claim now</span>
+        </span>
+      </button>
+    );
+  }
+  return (
+    <SignUpModal
+      trigger={
+        <button className="inline-flex items-center gap-2 rounded-full border border-warning/60 bg-warning/15 backdrop-blur px-4 py-2 hover:bg-warning/25 transition-colors cursor-pointer">
+          <Tag className="h-4 w-4 text-warning" />
+          <span className="text-sm text-white">
+            <span className="font-bold text-warning">50% OFF</span>{" "}
+            <span className="text-white/90">your first sample —</span>{" "}
+            <span className="underline underline-offset-2 hover:text-warning transition-colors">claim now</span>
+          </span>
+        </button>
+      }
+    />
+  );
+};
 
 export const Hero = () => {
   return (
@@ -31,23 +78,11 @@ export const Hero = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            <SignUpModal trigger={<Button size="lg" variant="hero">Start Testing</Button>} />
+            <StartTestingButton />
             <Button size="lg" variant="success" asChild><Link to="/verify">Verify a Report</Link></Button>
             <Button size="lg" variant="glass" asChild><a href="/verify-report/8Z8G-MRJB">See Example COA</a></Button>
           </div>
-
-          <SignUpModal
-            trigger={
-              <button className="inline-flex items-center gap-2 rounded-full border border-warning/60 bg-warning/15 backdrop-blur px-4 py-2 hover:bg-warning/25 transition-colors cursor-pointer">
-                <Tag className="h-4 w-4 text-warning" />
-                <span className="text-sm text-white">
-                  <span className="font-bold text-warning">50% OFF</span>{" "}
-                  <span className="text-white/90">your first sample —</span>{" "}
-                  <span className="underline underline-offset-2 hover:text-warning transition-colors">claim now</span>
-                </span>
-              </button>
-            }
-          />
+          <OfferBanner />
         </div>
       </div>
 

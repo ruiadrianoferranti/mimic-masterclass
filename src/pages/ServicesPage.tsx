@@ -68,7 +68,9 @@ const ServicesPage = () => (
                   <li key={f} className="flex gap-2"><Check className="h-4 w-4 text-accent shrink-0 mt-0.5" /> {f}</li>
                 ))}
               </ul>
-              <Button variant="outline" className="w-full">Order Now</Button>
+              <Button variant="outline" className="w-full" asChild>
+                <Link to="/request-service">Order Now</Link>
+              </Button>
             </div>
             {/* Biosafety addons */}
             <div className="rounded-2xl bg-card border border-border p-7 shadow-soft">
@@ -107,7 +109,9 @@ const ServicesPage = () => (
                   <li key={f} className="flex gap-2"><Check className="h-4 w-4 shrink-0 mt-0.5" /> {f}</li>
                 ))}
               </ul>
-              <Button variant="glass" className="w-full bg-white/20 border-white/40 hover:bg-white/30">Order Now</Button>
+              <Button variant="glass" className="w-full bg-white/20 border-white/40 hover:bg-white/30" asChild>
+                  <Link to="/request-service">Order Now</Link>
+                </Button>
             </div>
           </div>
         </div>
@@ -121,7 +125,9 @@ const ServicesPage = () => (
           <p className="text-muted-foreground mb-6">
             Switching labs is a big decision. We get it. That's why we're making it easy to experience our 48-72 hour turnaround and verification system firsthand — at half the cost. One sample. No commitment. See why vendors are making the switch.
           </p>
-          <Button size="lg" variant="hero">Claim 50% Off</Button>
+          <Button size="lg" variant="hero" asChild>
+                <Link to="/request-service">Claim 50% Off</Link>
+              </Button>
           <p className="text-xs text-muted-foreground mt-3">First order only · Auto-applies at checkout</p>
         </div>
       </section>

@@ -11,6 +11,8 @@ import VerifyPage from "./pages/VerifyPage.tsx";
 import VerifyReport from "./pages/VerifyReport.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
+import AdminReportForm from "./pages/AdminReportForm.tsx";
+import ServiceRequestPage from "./pages/ServiceRequestPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/verify-report/:code" element={<VerifyReport />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin/report-form" element={<AdminReportForm />} />
+          <Route path="/request-service" element={<ServiceRequestPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
