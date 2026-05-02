@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
@@ -25,7 +27,14 @@ const layers = [
   { n: 3, icon: Stamp, title: "Physical Serialization", body: "For premium testing tiers, we provide tamper-evident seals with unique serial numbers that link the physical vial to its digital record. Scan the QR, see the results — and know that seal hasn't been transferred.", how: "Your customers can verify in seconds. Scan the code, see the live data, check the cryptographic signature. No PDFs. No 'trust us.' Just proof.", howLabel: "The result" },
 ];
 
-const TrustProblemPage = () => (
+const TrustProblemPage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-16">
@@ -202,6 +211,7 @@ const TrustProblemPage = () => (
     </main>
     <Footer />
   </div>
-);
+  );
+};
 
 export default TrustProblemPage;
