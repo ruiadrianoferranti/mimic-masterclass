@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
@@ -11,6 +11,13 @@ const VerifyPage = () => {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === "#verify-top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [location]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +29,7 @@ const VerifyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div id="verify-top" className="min-h-screen bg-background">
       <Header />
       <main className="pt-16">
         <section className="py-24 md:py-32 bg-gradient-verify border-b border-border min-h-[80vh] flex items-center">
@@ -46,7 +53,6 @@ const VerifyPage = () => {
               <Button type="submit" variant="hero" size="lg" className="w-full" disabled={loading}>
                 {loading ? (<><Loader2 className="h-4 w-4 animate-spin" /> Verifying certificate...</>) : "Verify Certificate"}
               </Button>
-              <p className="text-xs text-muted-foreground text-center">Try sample code: <button type="button" className="font-mono text-primary underline" onClick={() => setCode("8Z8G-MRJB")}>8Z8G-MRJB</button></p>
             </form>
           </div>
         </section>

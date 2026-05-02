@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Lock, Zap, FlaskConical, ArrowRight } from "lucide-react";
 
 const pillars = [
-  { n: "01", icon: Lock, title: "Immutable Verification", body: "Every report lives at a unique URL, rendered live from our LIMS — not a downloadable file. Data is cryptographically hashed and securely stored.", cta: "See verification portal", href: "/verify" },
+  { n: "01", icon: Lock, title: "Immutable Verification", body: "Every report lives at a unique URL, rendered live from our LIMS — not a downloadable file. Data is cryptographically hashed and securely stored.", cta: "See verification portal", href: "/verify#verify-top" },
   { n: "02", icon: Zap, title: "48-72 Hour Turnaround", body: "International shipping and customs holds lock your capital for weeks. We're US-based with optimized workflows. Ship Monday, results Wednesday.", cta: "See how it works", href: "/#how-it-works" },
   { n: "03", icon: FlaskConical, title: "Biosafety Profiling", body: "A peptide can be 99% pure and still be loaded with bacterial endotoxins or heavy metals. We test what HPLC misses.", cta: "View testing tiers", href: "/services" },
 ];

@@ -101,7 +101,7 @@ const TrustProblemPage = () => (
       </section>
 
       {/* Three-layer stack */}
-      <section className="py-24">
+      <section id="security-stack" className="py-24">
         <div className="container max-w-5xl">
           <div className="text-center mb-14">
             <div className="text-xs font-mono tracking-widest text-primary uppercase mb-3">The HelixAnalyticals Approach</div>

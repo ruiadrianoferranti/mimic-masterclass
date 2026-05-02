@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
@@ -10,8 +12,17 @@ const peptides = ["AICAR","AOD-9604","BPC-157","Cagrilintide","CJC-1295 (no DAC)
 
 const upcoming = ["Heavy Metals — May 2026","Residual Solvents — April 2026","Residual Moisture — April 2026","Nuclear Magnetic Resonance (NMR) — Q3 2026","Variance Testing — April 2026","Sterility (Plate) — April 2026","LC-MS Identity — April 2026"];
 
-const ServicesPage = () => (
-  <div className="min-h-screen bg-background">
+const ServicesPage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === "#services-top" || location.hash === "") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [location]);
+
+  return (
+  <div id="services-top" className="min-h-screen bg-background">
     <Header />
     <main className="pt-16">
       {/* Hero */}
@@ -207,6 +218,7 @@ const ServicesPage = () => (
     </main>
     <Footer />
   </div>
-);
+  );
+};
 
 export default ServicesPage;
