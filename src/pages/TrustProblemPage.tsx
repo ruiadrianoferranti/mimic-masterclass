@@ -12,6 +12,13 @@ const problems = [
   { n: 3, icon: Stamp, title: "Physical Serialization", body: "For premium testing tiers, we provide tamper-evident seals with unique serial numbers that link the physical vial to its digital record. Scan the QR, see the results — and know that seal hasn't been transferred.", how: "Your customers can verify in seconds. Scan the code, see the live data, check the cryptographic signature. No PDFs. No 'trust us.' Just proof.", howLabel: "The result" },
 ];
 
+const fails = [
+  { icon: FileX, title: "Static PDFs", body: '"Just a PDF or a JPEG of a result is not proof." These files can be edited, duplicated, and redistributed without any trace. There\'s no connection between the document and the actual analysis — it\'s just pixels on a screen.' },
+  { icon: QrCode, title: "Legacy QR Codes", body: '"If the QR links to a file, the file can be swapped." Most QR-based systems just link to a hosted PDF. Replace the file on the server, and every QR code now points to a different document. The QR is just a URL — not verification.' },
+  { icon: KeyRound, title: "Key/Code Systems", body: '"Nobody actually types in a 16-character code." Verification keys add friction. Customers don\'t use them. And if the underlying system still stores editable data, the key is just security theater.' },
+  { icon: BadgeCheck, title: '"Trust Us" Claims', body: "Accreditations and certifications matter — but they certify the lab, not the result. An ISO 17025 lab can still produce a PDF that gets edited downstream. The credential doesn't follow the document." },
+];
+
 const TrustProblemPage = () => (
   <div className="min-h-screen bg-background">
     <Header />
