@@ -19,7 +19,7 @@ const schema = z.object({
   agree: z.literal(true, { errorMap: () => ({ message: "You must agree" }) }),
 });
 
-const VERIFICATION_CODE = "123456";
+const VERIFICATION_CODE = "90929766";
 
 interface Props {
   trigger: ReactNode;
