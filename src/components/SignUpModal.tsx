@@ -130,7 +130,7 @@ export const SignUpModal = ({ trigger, defaultMode = "signup" }: Props) => {
         setMode("verify");
         toast({
           title: "Verification code sent",
-          description: `SMS sent to ${form.phone}. Code: ${VERIFICATION_CODE}`,
+          description: `SMS sent to ${form.phone}.`,
         });
       } else {
         const { supabase } = await import("@/lib/supabase");
@@ -228,9 +228,6 @@ export const SignUpModal = ({ trigger, defaultMode = "signup" }: Props) => {
                 <Smartphone className="h-8 w-8 mx-auto mb-2 text-accent" />
                 <p className="text-sm text-muted-foreground">
                   A verification code has been sent to your phone.
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  (Demo code: <span className="font-mono font-bold">{VERIFICATION_CODE}</span>)
                 </p>
               </div>
               <div className="space-y-2">
