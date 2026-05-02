@@ -2,23 +2,40 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle2, Mail } from "lucide-react";
+import { CheckCircle2, Mail, Loader2 } from "lucide-react";
+import emailjs from "@emailjs/browser";
+
+const EMAILJS_PUBLIC_KEY = "sua_public_key_aqui";
+const EMAILJS_SERVICE_ID = "seu_service_id_aqui";
+const EMAILJS_TEMPLATE_ID = "seu_template_id_aqui";
 
 export const ContactForm = () => {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(formRef.current!);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const message = formData.get("message") as string;
+    if (!formRef.current) return;
 
-    const mailtoLink = `mailto:info@helixanalyticals.com?subject=Contact Form Submission from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+    setSending(true);
+    setError(false);
 
-    window.location.href = mailtoLink;
-    setSent(true);
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY
+      );
+      setSent(true);
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setError(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -38,10 +55,13 @@ export const ContactForm = () => {
           </div>
         ) : (
           <form ref={formRef} onSubmit={handleSubmit} className="rounded-2xl bg-card border border-border p-8 space-y-4 shadow-soft">
-            <Input name="name" placeholder="Your name" required className="h-12" />
-            <Input name="email" type="email" placeholder="Your email" required className="h-12" />
+            <Input name="from_name" placeholder="Your name" required className="h-12" />
+            <Input name="from_email" type="email" placeholder="Your email" required className="h-12" />
             <Textarea name="message" placeholder="Message" rows={5} required />
-            <Button type="submit" variant="hero" size="lg" className="w-full">Send message</Button>
+            <Button type="submit" variant="hero" size="lg" className="w-full" disabled={sending}>
+              {sending ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Sending...</> : "Send message"}
+            </Button>
+            {error && <p className="text-red-500 text-sm text-center">Failed to send message. Please try again.</p>}
           </form>
         )}
       </div>
