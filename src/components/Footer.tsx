@@ -14,8 +14,8 @@ export const Footer = () => (
         <h4 className="font-semibold mb-3 text-sm">Company</h4>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li><Link to="/services" className="hover:text-primary">Services</Link></li>
-          <li><Link to="/trust-problem#trust-problem" className="hover:text-primary">The Trust Problem</Link></li>
-          <li><Link to="/verify" className="hover:text-primary">Verify a Report</Link></li>
+          <li><Link to="/trust-problem" className="hover:text-primary">The Trust Problem</Link></li>
+          <li><Link to="/verify#verify-top" className="hover:text-primary">Verify a Report</Link></li>
           <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
         </ul>
       </div>
