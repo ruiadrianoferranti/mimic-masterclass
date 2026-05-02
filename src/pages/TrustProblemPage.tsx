@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
@@ -7,27 +9,22 @@ import { ShieldAlert, FileWarning, FlaskConical, Skull, FileX, QrCode, KeyRound,
 import { SignUpModal } from "@/components/SignUpModal";
 
 const problems = [
-  { icon: FileWarning, title: "PDF Editing", body: "A fast and loose vendor harvests a clean COA from another vendor and edits the PDF to make it their own. Even watermarks can be removed or replaced with AI. The PDF metadata often still shows the original creation date from years ago. This is outright fraud, but it is not uncommon — especially with low-price vendors.", example: "We've seen the same COA used across 15+ suppliers with different batch numbers. The file properties showed it was created in 2019.", exampleLabel: "Real example:" },
-  { icon: FlaskConical, title: "No Source Connection", body: "Once a PDF is exported, it's completely disconnected from the laboratory system that created it. There's no live link back to the original data — just a static snapshot that exists independently.", example: "Suspiciously flat baselines, peaks that don't match expected retention times, or chromatograms where the noise pattern suddenly changes mid-run.", exampleLabel: "What to look for:" },
-  { icon: ShieldAlert, title: 'The "Golden Sample" Bait', body: "A research peptide vendor obtains product from a Chinese supplier and has it tested by a third-party lab, with good results. Trusting that supplier, they continue to display the same COA for subsequent shipments. But most overseas suppliers are trading companies that obtain API from multiple manufacturers. The next shipment may be completely different — or damaged by heat exposure during shipping.", example: "Even a COA that has a verification link to the testing lab does not fix this problem.", exampleLabel: "The Verification Problem:" },
-  { icon: Skull, title: "Dry Labs & Fabrication", body: 'Some "labs" don\'t run tests at all. They generate plausible-looking results based on what you told them you\'re sending. No instrument. No analysis. Just a PDF.', example: "Unusually fast turnaround, suspiciously perfect results, no raw data available, and prices that seem too good to be true.", exampleLabel: "Red flags:" },
-];
-
-const fails = [
-  { icon: FileX, title: "Static PDFs", body: '"Just a PDF or a JPEG of a result is not proof." These files can be edited, duplicated, and redistributed without any trace. There\'s no connection between the document and the actual analysis — it\'s just pixels on a screen.' },
-  { icon: QrCode, title: "Legacy QR Codes", body: '"If the QR links to a file, the file can be swapped." Most QR-based systems just link to a hosted PDF. Replace the file on the server, and every QR code now points to a different document. The QR is just a URL — not verification.' },
-  { icon: KeyRound, title: "Key/Code Systems", body: '"Nobody actually types in a 16-character code." Verification keys add friction. Customers don\'t use them. And if the underlying system still stores editable data, the key is just security theater.' },
-  { icon: BadgeCheck, title: '"Trust Us" Claims', body: "Accreditations and certifications matter — but they certify the lab, not the result. An ISO 17025 lab can still produce a PDF that gets edited downstream. The credential doesn't follow the document." },
-];
-
-const layers = [
   { n: 1, icon: Database, title: "Live-Rendered Results", body: "Your results don't exist as a file. They're rendered live from our Laboratory Information Management System (LIMS) every time someone views them. There's no PDF to edit, no file to swap, no document to forge.", how: "Each report has a unique URL (e.g., verify.helixanalyticals.com/VPL-2024-08291). When you visit that URL, our system queries the database and renders the current, authoritative data. The 'document' is the database — not a copy of it.", howLabel: "How it works" },
   { n: 2, icon: Lock, title: "Cryptographic Signing", body: "When we finalize a result, we cryptographically hash the data and sign it. This creates a permanent, immutable timestamp that proves the data existed in its current form at a specific moment.", how: "Even if someone compromised our database, they couldn't alter historical results without the hash mismatch being immediately detectable. The signature proves the data hasn't changed.", howLabel: "What this means" },
   { n: 3, icon: Stamp, title: "Physical Serialization", body: "For premium testing tiers, we provide tamper-evident seals with unique serial numbers that link the physical vial to its digital record. Scan the QR, see the results — and know that seal hasn't been transferred.", how: "Your customers can verify in seconds. Scan the code, see the live data, check the cryptographic signature. No PDFs. No 'trust us.' Just proof.", howLabel: "The result" },
 ];
 
-const TrustProblemPage = () => (
-  <div className="min-h-screen bg-background">
+const TrustProblemPage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === "#trust-problem" || location.hash === "") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [location]);
+
+  return (
+  <div id="trust-problem" className="min-h-screen bg-background">
     <Header />
     <main className="pt-16">
       {/* Hero */}
@@ -203,6 +200,7 @@ const TrustProblemPage = () => (
     </main>
     <Footer />
   </div>
-);
+  );
+};
 
 export default TrustProblemPage;

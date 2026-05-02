@@ -16,7 +16,7 @@ import {
 const links = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
-  { label: "The Trust Problem", href: "/trust-problem" },
+  { label: "The Trust Problem", href: "/trust-problem#trust-problem" },
   { label: "Contact", href: "/contact" },
   { label: "Verify COA", href: "/verify" },
 ];
