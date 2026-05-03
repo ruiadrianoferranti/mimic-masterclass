@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { Search, Package, Loader2 } from "lucide-react";
+import { Search, Package, Loader2, Upload, CheckCircle, Clock } from "lucide-react";
 
 interface Report {
   report_id: string;
@@ -25,13 +25,18 @@ interface Report {
   peak_area: number | null;
   peak_height: number | null;
   user_email: string;
+  product_image_path: string | null;
 }
 
 const AdminReportForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingReports, setLoadingReports] = useState(false);
   const [pendingReports, setPendingReports] = useState<Report[]>([]);
+  const [allReports, setAllReports] = useState<Report[]>([]);
   const [selectedReportId, setSelectedReportId] = useState("");
+  const [productImage, setProductImage] = useState<File | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [showAllReports, setShowAllReports] = useState(false);
   const [formData, setFormData] = useState({
     report_id: "",
     client_name: "",
@@ -46,12 +51,17 @@ const AdminReportForm = () => {
     retention_time: "",
     peak_area: "",
     peak_height: "",
-    user_email: ""
+    user_email: "",
+    product_image_path: ""
   });
 
   useEffect(() => {
-    loadPendingReports();
-  }, []);
+    if (showAllReports) {
+      loadAllReports();
+    } else {
+      loadPendingReports();
+    }
+  }, [showAllReports]);
 
   const loadPendingReports = async () => {
     setLoadingReports(true);
@@ -72,9 +82,28 @@ const AdminReportForm = () => {
     }
   };
 
+  const loadAllReports = async () => {
+    setLoadingReports(true);
+    try {
+      const { data, error } = await supabase
+        .from("reports")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+      setAllReports(data || []);
+    } catch (error: any) {
+      console.error("Error loading reports:", error);
+      toast.error("Error loading reports");
+    } finally {
+      setLoadingReports(false);
+    }
+  };
+
   const handleSelectReport = (reportId: string) => {
     setSelectedReportId(reportId);
-    const report = pendingReports.find(r => r.report_id === reportId);
+    const report = [...pendingReports, ...allReports].find(r => r.report_id === reportId);
     if (report) {
       setFormData({
         report_id: report.report_id || "",
@@ -84,14 +113,16 @@ const AdminReportForm = () => {
         analysis_completed_date: report.analysis_completed_date || "",
         product_name: report.product_name || "",
         expected_quantity: report.expected_quantity?.toString() || "",
-        purity_result: "",
-        identity_result: "",
-        quantity_result: "",
-        retention_time: "",
-        peak_area: "",
-        peak_height: "",
-        user_email: report.user_email || ""
+        purity_result: report.purity_result?.toString() || "",
+        identity_result: report.identity_result?.toString() || "",
+        quantity_result: report.quantity_result?.toString() || "",
+        retention_time: report.retention_time?.toString() || "",
+        peak_area: report.peak_area?.toString() || "",
+        peak_height: report.peak_height?.toString() || "",
+        user_email: report.user_email || "",
+        product_image_path: report.product_image_path || ""
       });
+      setProductImage(null);
     }
   };
 
@@ -99,12 +130,61 @@ const AdminReportForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProductImage(e.target.files[0]);
+    }
+  };
+
+  const uploadProductImage = async (reportId: string): Promise<string | null> => {
+    if (!productImage) return null;
+    
+    setUploadingImage(true);
+    try {
+      const fileExt = productImage.name.split('.').pop();
+      const fileName = `${reportId}.${fileExt}`;
+      
+      console.log("Uploading to bucket 'product-images', file:", fileName);
+      
+      const { data, error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, productImage, {
+          upsert: true
+        });
+
+      if (uploadError) {
+        console.error("Upload error:", uploadError);
+        throw uploadError;
+      }
+
+      console.log("Upload success:", data);
+
+      const { data: urlData } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+
+      console.log("Public URL data:", urlData);
+      return urlData?.publicUrl || null;
+    } catch (error: any) {
+      console.error("Error uploading image:", error);
+      toast.error("Error uploading product image: " + error.message);
+      return null;
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const updateData = {
+      const imageUrl = await uploadProductImage(formData.report_id);
+      
+      console.log("Image URL returned:", imageUrl);
+      console.log("Existing path:", formData.product_image_path);
+      
+      const updateData: Record<string, any> = {
         client_name: formData.client_name,
         batch_lot: formData.batch_lot,
         sample_received_date: formData.sample_received_date || null,
@@ -118,6 +198,7 @@ const AdminReportForm = () => {
         peak_area: formData.peak_area ? parseFloat(formData.peak_area) : null,
         peak_height: formData.peak_height ? parseFloat(formData.peak_height) : null,
         user_email: formData.user_email,
+        product_image_path: imageUrl || formData.product_image_path || null,
       };
 
       const { error } = await supabase
@@ -143,10 +224,16 @@ const AdminReportForm = () => {
         retention_time: "",
         peak_area: "",
         peak_height: "",
-        user_email: ""
+        user_email: "",
+        product_image_path: ""
       });
       setSelectedReportId("");
-      loadPendingReports();
+      setProductImage(null);
+      if (showAllReports) {
+        loadAllReports();
+      } else {
+        loadPendingReports();
+      }
 
     } catch (error: any) {
       console.error("Error updating data:", error);
@@ -170,26 +257,66 @@ const AdminReportForm = () => {
             </CardHeader>
             <CardContent>
               <div className="mb-6">
-                <Label className="mb-2 block">Select Pending Report</Label>
+                <div className="flex items-center justify-between mb-4">
+                  <Label className="block">Select Report</Label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAllReports(!showAllReports);
+                      setSelectedReportId("");
+                      setFormData({
+                        report_id: "",
+                        client_name: "",
+                        batch_lot: "",
+                        sample_received_date: "",
+                        analysis_completed_date: "",
+                        product_name: "",
+                        expected_quantity: "",
+                        purity_result: "",
+                        identity_result: "",
+                        quantity_result: "",
+                        retention_time: "",
+                        peak_area: "",
+                        peak_height: "",
+                        user_email: "",
+                        product_image_path: ""
+                      });
+                      setProductImage(null);
+                    }}
+                    className="flex items-center gap-2 text-sm text-primary hover:underline"
+                  >
+                    {showAllReports ? (
+                      <>
+                        <Clock className="h-4 w-4" />
+                        Show Pending Only
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="h-4 w-4" />
+                        Show All Reports
+                      </>
+                    )}
+                  </button>
+                </div>
                 {loadingReports ? (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Loading pending reports...
+                    Loading reports...
                   </div>
-                ) : pendingReports.length === 0 ? (
+                ) : (showAllReports ? allReports.length === 0 : pendingReports.length === 0) ? (
                   <div className="text-muted-foreground p-4 border rounded-lg bg-secondary/30">
-                    No pending reports found. All reports have been processed.
+                    {showAllReports ? "No reports found." : "No pending reports found. All reports have been processed."}
                   </div>
                 ) : (
                   <Select value={selectedReportId} onValueChange={handleSelectReport}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a pending report to update" />
+                      <SelectValue placeholder={showAllReports ? "Select a report" : "Select a pending report to update"} />
                     </SelectTrigger>
                     <SelectContent>
-                      {pendingReports.map((report) => (
+                      {(showAllReports ? allReports : pendingReports).map((report) => (
                         <SelectItem key={report.report_id} value={report.report_id}>
                           <div className="flex items-center gap-2">
-                            <Package className="h-4 w-4" />
+                            {report.retention_time ? <CheckCircle className="h-4 w-4 text-green-500" /> : <Clock className="h-4 w-4 text-orange-500" />}
                             <span className="font-mono text-xs">{report.report_id}</span>
                             <span className="text-muted-foreground">- {report.product_name}</span>
                           </div>
@@ -235,6 +362,33 @@ const AdminReportForm = () => {
                         <Label htmlFor="batch_lot">Batch / Lot</Label>
                         <Input id="batch_lot" name="batch_lot" value={formData.batch_lot} onChange={handleChange} />
                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Product Image</Label>
+                      <div className="flex items-center gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer border rounded-lg px-4 py-2 hover:bg-secondary/50 transition-colors">
+                          <Upload className="h-4 w-4" />
+                          <span className="text-sm">
+                            {productImage ? productImage.name : formData.product_image_path ? "Change image" : "Upload image"}
+                          </span>
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={handleImageChange} 
+                            className="hidden" 
+                          />
+                        </label>
+                        {(productImage || formData.product_image_path) && (
+                          <span className="text-sm text-green-600">Image selected</span>
+                        )}
+                      </div>
+                      {uploadingImage && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Uploading image...
+                        </div>
+                      )}
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">

@@ -141,6 +141,8 @@ const certificateRef = useRef<HTMLDivElement>(null);
         width: 960,
         height: 1356,
         pixelRatio: 2,
+        useCORS: true,
+        allowTaint: true,
       });
 
       const doc = new jsPDF({

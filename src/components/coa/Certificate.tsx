@@ -16,6 +16,7 @@ interface CoaData {
   peak_area?: string;
   peak_height?: string;
   created_at: string;
+  product_image_path?: string;
 }
 
 function seededRandom(seed: number) {
@@ -303,14 +304,22 @@ export const Certificate = forwardRef<HTMLDivElement, Props>(({ data }, ref) => 
       {/* Info grid */}
       <div className="mt-6 rounded-2xl bg-[var(--coa-surface)] p-4 grid grid-cols-[200px_1fr_240px] gap-4 items-stretch">
         <div className="rounded-xl bg-white flex items-center justify-center overflow-hidden">
-          <div className="text-[var(--coa-blue)] text-center p-4">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mx-auto mb-2">
-              <path d="M12 3 L3 8 L12 13 L21 8 L12 3 Z" stroke="currentColor" strokeWidth="2" fill="none" />
-              <path d="M3 13 L12 18 L21 13" stroke="currentColor" strokeWidth="2" fill="none" />
-              <path d="M3 18 L12 23 L21 18" stroke="currentColor" strokeWidth="2" fill="none" />
-            </svg>
-            <span className="text-xs">Product Image</span>
-          </div>
+          {data.product_image_path ? (
+            <img 
+              src={data.product_image_path} 
+              alt="Product Image" 
+              className="w-full h-full object-contain p-2"
+            />
+          ) : (
+            <div className="text-[var(--coa-blue)] text-center p-4">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mx-auto mb-2">
+                <path d="M12 3 L3 8 L12 13 L21 8 L12 3 Z" stroke="currentColor" strokeWidth="2" fill="none" />
+                <path d="M3 13 L12 18 L21 13" stroke="currentColor" strokeWidth="2" fill="none" />
+                <path d="M3 18 L12 23 L21 18" stroke="currentColor" strokeWidth="2" fill="none" />
+              </svg>
+              <span className="text-xs">Product Image</span>
+            </div>
+          )}
         </div>
         <div className="rounded-xl bg-white border border-[oklch(0.93_0.01_250)] px-5 py-2 flex flex-col justify-center">
           <FieldRow icon="◎" label="DECLARED IDENTITY" value={data.identity_result || data.product_name || "N/A"} />
