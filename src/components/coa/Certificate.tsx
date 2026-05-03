@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import QRCode from "react-qr-code";
 
 interface CoaData {
   report_id: string;
@@ -89,8 +90,8 @@ function HPLCChart({ retentionTime, purity, peakHeight, reportId }: { retentionT
   const data = generateHPLCData(rt, pur, ph, reportId);
   
   const width = 860;
-  const height = 200;
-  const padding = { top: 25, right: 20, bottom: 15, left: 40 };
+  const height = 350;
+  const padding = { top: 25, right: 20, bottom: 23, left: 40 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
   
@@ -144,10 +145,10 @@ function HPLCChart({ retentionTime, purity, peakHeight, reportId }: { retentionT
       <path d={linePath} fill="none" stroke={primaryColor} strokeWidth={2} />
       
       <text x={padding.left - 5} y={padding.top - 8} fontSize="10" fill={mutedColor} textAnchor="end" fontFamily="system-ui, sans-serif">mAU</text>
-      <text x={width - padding.right} y={height - 2} fontSize="10" fill={mutedColor} textAnchor="end" fontFamily="system-ui, sans-serif">minutes</text>
+      
       
       {[timeMin, (timeMin + timeMax) / 2, timeMax].map((t, i) => (
-        <text key={i} x={xScale(t)} y={height - 2} fontSize="10" fill={mutedColor} textAnchor="middle" fontFamily="system-ui, sans-serif">
+        <text key={i} x={xScale(t)} y={height - 5} fontSize="10" fill={mutedColor} textAnchor="middle" fontFamily="system-ui, sans-serif">
           {t.toFixed(1)}
         </text>
       ))}
@@ -163,7 +164,7 @@ function HPLCChart({ retentionTime, purity, peakHeight, reportId }: { retentionT
         RT: {rt.toFixed(2)} min | Area: {pur.toFixed(1)}%
       </text>
       
-      <text x={width - padding.right - 5} y={height - 2} fontSize="10" fill={mutedColor} textAnchor="end" fontFamily="monospace, system-ui">mAU vs minutes</text>
+      <text x={width - padding.right - 5} y={height - 34} fontSize="10" fill={mutedColor} textAnchor="end" fontFamily="monospace, system-ui">minutes</text>
     </svg>
   );
 }
@@ -204,14 +205,18 @@ function MetricCard({ icon, value, label }: { icon: React.ReactNode; value: stri
   );
 }
 
-function Signature({ seed, color = "var(--coa-blue)" }: { seed: string; color?: string }) {
+function Signature() {
   return (
-    <svg width="240" height="90" viewBox="0 0 240 90" style={{ display: "block" }}>
-      <text x="10" y="60" fontSize="32" fontFamily="cursive" fill={color} transform="rotate(-5 120 45)">
-        {seed.slice(0, 3)}
-      </text>
-      <path d="M 50 70 Q 80 20 120 50 T 200 40" stroke={color} strokeWidth="2" fill="none" />
-    </svg>
+    <img 
+      src="/signature.png" 
+      alt="Signature" 
+      style={{ 
+        width: '200px', 
+        height: 'auto', 
+        opacity: 0.7,
+        display: 'block'
+      }} 
+    />
   );
 }
 
@@ -388,13 +393,21 @@ export const Certificate = forwardRef<HTMLDivElement, Props>(({ data }, ref) => 
             RESULTS REVIEWED BY:
           </div>
           <div className="mt-1">
-            <Signature seed="Anthony" />
+            <Signature />
           </div>
-          <div className="text-sm font-medium">Anthony Burke PhD</div>
+          <div className="text-sm font-medium">Dr. Peter Smith</div>
           <div className="text-xs text-muted-foreground">Lab Manager</div>
           <div className="text-xs text-muted-foreground">{formatDate(data.analysis_completed_date)}</div>
         </div>
-        <div className="text-right pr-4">
+        <div className="text-right pr-4 flex flex-col items-end">
+          <div className="mb-2">
+            <QRCode 
+              value={`https://helixanalyticals.com/verify-report/${data.report_id}`}
+              size={80}
+              level="M"
+              includeMargin={false}
+            />
+          </div>
           <div className="text-sm font-semibold text-[var(--coa-blue)]">www.helixanalyticals.com</div>
           <div className="text-xs text-muted-foreground">{data.report_id}</div>
           <div className="text-xs text-muted-foreground">{formatDate(data.analysis_completed_date)}</div>
