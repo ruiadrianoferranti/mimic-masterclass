@@ -13,10 +13,16 @@ import { ShieldCheck, Lock, Database, FileCheck, Activity, Download, AlertTriang
 
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, ReferenceLine } from "recharts";
 
-const generateHPLCData = (retentionTime: number, purity: number, peakHeight: number) => {
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
+const generateHPLCData = (retentionTime: number, purity: number, peakHeight: number, reportId?: string) => {
   const data = [];
   const rt = retentionTime || 5.5; 
   const purityValue = purity || 99; 
+  const seed = reportId ? reportId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : 0;
   
   const startX = 0;
   const endX = 20;
@@ -26,30 +32,47 @@ const generateHPLCData = (retentionTime: number, purity: number, peakHeight: num
     return height * Math.exp(-Math.pow(x - center, 2) / (2 * width * width));
   };
   
+  let noiseSeed = seed;
   for (let x = startX; x <= endX; x += step) {
-    let y = Math.random() * 2;
+    const noise1 = seededRandom(noiseSeed++) * 1.5;
+    const noise2 = seededRandom(noiseSeed++) * 0.5;
+    let y = noise1 + noise2;
     
-    // Minimal baseline noise
-    y += Math.sin(x * 2) * 0.5;
+    // Minimal baseline drift based on report
+    const baselinePhase = seededRandom(seed + 1) * Math.PI * 2;
+    y += Math.sin(x * 0.8 + baselinePhase) * 1.2;
     
-    // Very small solvent front
-    y += peak(x, 0.65, 0.15, 8);
-    y += peak(x, 1.1, 0.08, 4);
+    // Solvent front - slightly varies per report
+    const solventShift = (seededRandom(seed + 10) - 0.5) * 0.3;
+    y += peak(x, 0.65 + solventShift, 0.15, 8);
+    y += peak(x, 1.1 + solventShift * 0.5, 0.08, 4);
     
-    // Tiny impurity peaks (<5% total)
+    // Impurity peaks - unique per report but deterministic
+    const impuritySeedBase = seed + 20;
     if (purityValue < 99.5) {
-      y += peak(x, 2.8, 0.06, 15);
-      y += peak(x, 3.6, 0.05, 10);
-      y += peak(x, 4.2, 0.05, 8);
+      const imp1Height = 12 + seededRandom(impuritySeedBase) * 8;
+      const imp1Pos = 2.5 + seededRandom(impuritySeedBase + 1) * 1.5;
+      y += peak(x, imp1Pos, 0.05 + seededRandom(impuritySeedBase + 2) * 0.03, imp1Height);
+      
+      const imp2Height = 8 + seededRandom(impuritySeedBase + 3) * 6;
+      const imp2Pos = 3.5 + seededRandom(impuritySeedBase + 4) * 1.2;
+      y += peak(x, imp2Pos, 0.05, imp2Height);
     }
     
-    // Main peak - sharp, dominant
-    y += peak(x, rt, 0.05, peakHeight);
+    // Main peak - sharp, dominant (deterministic slight tailing based on seed)
+    const mainTailing = 0.045 + seededRandom(seed + 100) * 0.015;
+    y += peak(x, rt, mainTailing, peakHeight);
     
-    // Very few small peaks after main
+    // Secondary peaks after main - deterministic per report
     if (purityValue < 99) {
-      y += peak(x, 6.3, 0.06, 12);
-      y += peak(x, 7.5, 0.05, 6);
+      const secSeedBase = seed + 50;
+      const sec1Height = 8 + seededRandom(secSeedBase) * 10;
+      const sec1Pos = 5.8 + seededRandom(secSeedBase + 1) * 1.2;
+      y += peak(x, sec1Pos, 0.06, sec1Height);
+      
+      const sec2Height = 4 + seededRandom(secSeedBase + 2) * 6;
+      const sec2Pos = 7.0 + seededRandom(secSeedBase + 3) * 1.0;
+      y += peak(x, sec2Pos, 0.05, sec2Height);
     }
     
     // Impurity simulation - based on purity (100% = no impurities)
@@ -135,7 +158,7 @@ const certificateRef = useRef<HTMLDivElement>(null);
 
   const renderPrintChart = () => {
     if (!report.retention_time) return null;
-    const data = generateHPLCData(Number(report.retention_time), Number(report.purity_result), Number(report.peak_height) || 800);
+    const data = generateHPLCData(Number(report.retention_time), Number(report.purity_result), Number(report.peak_height) || 800, report.report_id);
     const maxVal = Math.max(...data.map(d => d.mAU));
     
     return (
@@ -335,7 +358,7 @@ const certificateRef = useRef<HTMLDivElement>(null);
               <div className="relative h-72 rounded-xl bg-background border border-border overflow-hidden p-4 pt-8">
                 {report.retention_time ? (
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={generateHPLCData(Number(report.retention_time), Number(report.purity_result), Number(report.peak_height) || 800)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <AreaChart data={generateHPLCData(Number(report.retention_time), Number(report.purity_result), Number(report.peak_height) || 800, report.report_id)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                       <XAxis 
                         dataKey="time" 
