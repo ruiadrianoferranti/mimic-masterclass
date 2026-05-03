@@ -1,8 +1,10 @@
 import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { jsPDF } from "jspdf";
+import { toPng } from "html-to-image";
 import { supabase } from "@/lib/supabase";
+import { Certificate } from "@/components/coa/Certificate";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
@@ -13,20 +15,41 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Refe
 
 const generateHPLCData = (retentionTime: number, purity: number, peakHeight: number) => {
   const data = [];
-  const rt = retentionTime || 5.0; 
-  const purityValue = purity || 100; 
+  const rt = retentionTime || 5.5; 
+  const purityValue = purity || 99; 
   
-  const startX = Math.max(0, rt - 2.5);
-  const endX = rt + 2.5;
-  const c = 0.08; 
+  const startX = 0;
+  const endX = 20;
+  const step = (endX - startX) / 200;
   
-  const step = (endX - startX) / 100;
+  const peak = (x: number, center: number, width: number, height: number) => {
+    return height * Math.exp(-Math.pow(x - center, 2) / (2 * width * width));
+  };
+  
   for (let x = startX; x <= endX; x += step) {
-    let y = Math.random() * 2; // Baseline noise
+    let y = Math.random() * 2;
     
-    // Main peak
-    if (Math.abs(x - rt) < 1.0) {
-      y += peakHeight * Math.exp(-Math.pow(x - rt, 2) / (2 * Math.pow(c, 2)));
+    // Minimal baseline noise
+    y += Math.sin(x * 2) * 0.5;
+    
+    // Very small solvent front
+    y += peak(x, 0.65, 0.15, 8);
+    y += peak(x, 1.1, 0.08, 4);
+    
+    // Tiny impurity peaks (<5% total)
+    if (purityValue < 99.5) {
+      y += peak(x, 2.8, 0.06, 15);
+      y += peak(x, 3.6, 0.05, 10);
+      y += peak(x, 4.2, 0.05, 8);
+    }
+    
+    // Main peak - sharp, dominant
+    y += peak(x, rt, 0.05, peakHeight);
+    
+    // Very few small peaks after main
+    if (purityValue < 99) {
+      y += peak(x, 6.3, 0.06, 12);
+      y += peak(x, 7.5, 0.05, 6);
     }
     
     // Impurity simulation - based on purity (100% = no impurities)
@@ -84,157 +107,30 @@ const VerifyReport = () => {
     }).format(date);
   };
 
-  const downloadPDF = () => {
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 15;
-    let y = 20;
+const certificateRef = useRef<HTMLDivElement>(null);
 
-    doc.setDrawColor(34, 65, 145);
-    doc.setLineWidth(1);
-    doc.line(margin, y, pageWidth - margin, y);
-    y += 10;
+  const downloadPDF = async () => {
+    const element = certificateRef.current;
+    if (!element) return;
 
-    const leftCol = margin;
-    const rightCol = 90;
-    const colWidth = 85;
+    try {
+      const dataUrl = await toPng(element, {
+        width: 960,
+        height: 1356,
+        pixelRatio: 2,
+      });
 
-    doc.setFillColor(248, 250, 252);
-    doc.rect(leftCol, y, colWidth, 28, "F");
-    doc.rect(rightCol, y, colWidth + 20, 35, "F");
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [960, 1356],
+      });
 
-    doc.setFontSize(10);
-    doc.setTextColor(100, 116, 139);
-    doc.text("SAMPLE NAME:", leftCol + 2, y + 5);
-    doc.text("SAMPLE CODE:", leftCol + 2, y + 11);
-    doc.text("RECEIVED DATE:", leftCol + 2, y + 17);
-    doc.text("PUBLISHED DATE:", leftCol + 2, y + 23);
-
-    doc.setTextColor(14, 21, 52);
-    doc.setFont("helvetica", "bold");
-    doc.text(report.product_name || "N/A", leftCol + 30, y + 5);
-    doc.text(report.report_id || "N/A", leftCol + 30, y + 11);
-    doc.text(formatDate(report.sample_received_date) || "N/A", leftCol + 35, y + 17);
-    doc.text(formatDate(report.analysis_completed_date) || "N/A", leftCol + 35, y + 23);
-
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 116, 139);
-    doc.text("DECLARED IDENTITY:", rightCol, y + 5);
-    doc.text("MATRIX TYPE:", rightCol, y + 11);
-    doc.text("SAMPLE NAME:", rightCol, y + 17);
-    doc.text("SAMPLE SIZE:", rightCol, y + 23);
-    doc.text("LOT CODE:", rightCol, y + 29);
-
-    doc.setTextColor(14, 21, 52);
-    doc.setFont("helvetica", "bold");
-    doc.text(report.identity_result || report.product_name || "N/A", rightCol + 35, y + 5);
-    doc.text("PEPTIDE", rightCol + 35, y + 11);
-    doc.text(report.batch_lot || "N/A", rightCol + 35, y + 17);
-    doc.text(report.expected_quantity || report.quantity_result || "N/A", rightCol + 35, y + 23);
-    doc.text((report.batch_lot || "") + "HYBCBC", rightCol + 35, y + 29);
-
-    y += 40;
-    const qty = report.quantity_result || "N/A";
-    const purity = report.purity_result || "N/A";
-
-    doc.setFillColor(241, 245, 249);
-    doc.rect(leftCol, y, 60, 22, "F");
-    doc.rect(leftCol + 65, y, 60, 22, "F");
-
-    doc.setFontSize(9);
-    doc.setTextColor(100, 116, 139);
-    doc.setFont("helvetica", "normal");
-    doc.text("TOTAL QUANTITY", leftCol + 2, y + 5);
-    doc.text("TOTAL BLEND PURITY", leftCol + 67, y + 5);
-
-    doc.setFontSize(16);
-    doc.setTextColor(34, 65, 145);
-    doc.setFont("helvetica", "bold");
-    doc.text(qty, leftCol + 2, y + 16);
-    doc.text(purity, leftCol + 67, y + 16);
-
-    y += 28;
-    doc.setDrawColor(226, 231, 241);
-    doc.setLineWidth(0.5);
-    doc.line(margin, y, pageWidth - margin, y);
-    y += 6;
-
-    doc.setFillColor(226, 231, 241);
-    doc.rect(margin, y, pageWidth - margin * 2, 7, "F");
-
-    doc.setFontSize(8);
-    doc.setTextColor(14, 21, 52);
-    doc.setFont("helvetica", "bold");
-    doc.text("Sample Test", margin + 2, y + 5);
-    doc.text("Specification", margin + 55, y + 5);
-    doc.text("Result", margin + 105, y + 5);
-    doc.text("Status", margin + 150, y + 5);
-    y += 9;
-
-    doc.setFont("helvetica", "normal");
-    const product = report.product_name || "N/A";
-
-    doc.setTextColor(14, 21, 52);
-    doc.text(product, margin + 2, y);
-    doc.text("IDENTITY", margin + 55, y);
-    doc.text(product, margin + 105, y);
-    doc.setTextColor(0, 170, 0);
-    doc.text("CONFORMS", margin + 150, y);
-    y += 6;
-
-    doc.setTextColor(14, 21, 52);
-    doc.text(product, margin + 2, y);
-    doc.text("QUANTITY", margin + 55, y);
-    doc.text("MEASURE", margin + 105, y);
-    doc.text(qty, margin + 125, y);
-    doc.setTextColor(0, 170, 0);
-    doc.text("MEASURED", margin + 155, y);
-    y += 6;
-
-    doc.setTextColor(14, 21, 52);
-    doc.text(product, margin + 2, y);
-    doc.text("PURITY", margin + 55, y);
-    doc.text("> 98.0%", margin + 105, y);
-    doc.text(purity, margin + 125, y);
-    doc.setTextColor(0, 170, 0);
-    doc.text("CONFORMS", margin + 155, y);
-
-    y += 15;
-    doc.setDrawColor(34, 65, 145);
-    doc.setLineWidth(1);
-    doc.line(margin, y, pageWidth - margin, y);
-    y += 8;
-
-    doc.setFillColor(248, 250, 252);
-    doc.rect(margin, y, 75, 22, "F");
-    doc.rect(margin + 80, y, 75, 22, "F");
-
-    doc.setFontSize(9);
-    doc.setTextColor(198, 206, 227);
-    doc.text("RESULTS REVIEWED BY:", margin + 2, y + 4);
-    doc.text("RESULTS CERTIFIED BY:", margin + 82, y + 4);
-
-    doc.setTextColor(14, 21, 52);
-    doc.setFont("helvetica", "bold");
-    doc.text("Anthony Burke PhD", margin + 2, y + 10);
-    doc.text("Dr. Levi Fried MD", margin + 82, y + 10);
-
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 116, 139);
-    doc.text("Lab Manager", margin + 2, y + 15);
-    doc.text("Lab Director", margin + 82, y + 15);
-
-    doc.setTextColor(198, 206, 227);
-    doc.text(formatDate(report.analysis_completed_date) || "", margin + 2, y + 20);
-    doc.text(formatDate(report.analysis_completed_date) || "", margin + 82, y + 20);
-
-    doc.setTextColor(198, 206, 227);
-    doc.text(report.report_id || "", pageWidth - margin, y + 10, { align: "right" });
-    doc.text(formatDate(report.analysis_completed_date) || "", pageWidth - margin, y + 15, { align: "right" });
-
-    doc.save(`COA-${report.report_id}.pdf`);
+      doc.addImage(dataUrl, "PNG", 0, 0, 960, 1356);
+      doc.save(`COA-${report.report_id}.pdf`);
+    } catch (err) {
+      console.error("Failed to generate PDF:", err);
+    }
   };
 
   const renderPrintChart = () => {
@@ -466,7 +362,6 @@ const VerifyReport = () => {
                         activeDot={{ r: 4 }}
                         isAnimationActive={true}
                       />
-                      <ReferenceLine x={Number(report.retention_time)} stroke="hsl(var(--primary))" strokeDasharray="3 3" />
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (
@@ -646,6 +541,10 @@ const VerifyReport = () => {
           </div>
         </div>
         )}
+
+        <div className="hidden">
+          <Certificate ref={certificateRef} data={report} />
+        </div>
       </main>
       <Footer />
     </div>
