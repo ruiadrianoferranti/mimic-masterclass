@@ -17,6 +17,8 @@ interface CoaData {
   peak_height?: string;
   created_at: string;
   product_image_path?: string;
+  client_logo_path?: string;
+  client_website?: string;
 }
 
 function seededRandom(seed: number) {
@@ -278,15 +280,26 @@ export const Certificate = forwardRef<HTMLDivElement, Props>(({ data }, ref) => 
         }}
       >
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-xl bg-white flex flex-col items-center justify-center text-[var(--coa-blue)] text-xs font-semibold text-center p-2">
-            <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8 mb-1" stroke="currentColor" strokeWidth="2">
-              <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01" />
-            </svg>
-            <span>Logo</span>
+          <div className="w-20 h-20 rounded-xl bg-white flex flex-col items-center justify-center text-[var(--coa-blue)] text-xs font-semibold text-center p-2 overflow-hidden">
+            {data.client_logo_path ? (
+              <img 
+                src={`${data.client_logo_path}?v=${data.report_id}`} 
+                alt="Client Logo" 
+                className="w-full h-full object-contain p-1"
+                key={data.client_logo_path}
+              />
+            ) : (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8 mb-1" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01" />
+                </svg>
+                <span>Logo</span>
+              </>
+            )}
           </div>
           <div className="text-white">
             <div className="text-lg font-semibold">{data.client_name || "Client Company"}</div>
-            <div className="text-sm opacity-80">www.client-website.com</div>
+            <div className="text-sm opacity-80">{data.client_website || "www.client-website.com"}</div>
           </div>
         </div>
         <div className="text-white text-sm grid grid-cols-[auto_auto] gap-x-6 gap-y-1">
@@ -306,9 +319,10 @@ export const Certificate = forwardRef<HTMLDivElement, Props>(({ data }, ref) => 
         <div className="rounded-xl bg-white flex items-center justify-center overflow-hidden">
           {data.product_image_path ? (
             <img 
-              src={data.product_image_path} 
+              src={`${data.product_image_path}?v=${data.report_id}`} 
               alt="Product Image" 
               className="w-full h-full object-contain p-2"
+              key={data.product_image_path}
             />
           ) : (
             <div className="text-[var(--coa-blue)] text-center p-4">
@@ -325,7 +339,7 @@ export const Certificate = forwardRef<HTMLDivElement, Props>(({ data }, ref) => 
           <FieldRow icon="◎" label="DECLARED IDENTITY" value={data.identity_result || data.product_name || "N/A"} />
           <FieldRow icon="▦" label="MATRIX TYPE:" value="PEPTIDE" />
           <FieldRow icon="A" label="SAMPLE NAME:" value={data.product_name || "N/A"} />
-          <FieldRow icon="▭" label="SAMPLE SIZE:" value={data.quantity_result || "N/A"} />
+          <FieldRow icon="▭" label="SAMPLE SIZE:" value={data.expected_quantity || "N/A"} />
           <FieldRow icon="№" label="LOT CODE:" value={data.batch_lot || "N/A"} />
         </div>
         <div className="rounded-xl bg-white px-5 py-4 space-y-2 flex flex-col justify-center">
@@ -346,7 +360,7 @@ export const Certificate = forwardRef<HTMLDivElement, Props>(({ data }, ref) => 
                 <path d="M12 3 C7 11 5 14 5 17 a7 7 0 0 0 14 0 c0-3-2-6-7-14z" stroke="currentColor" strokeWidth="2" fill="none" />
               </svg>
             }
-            value={data.purity_result || "N/A"}
+            value={data.purity_result ? `${data.purity_result}%` : "N/A"}
             label="Total Blend Purity"
           />
         </div>

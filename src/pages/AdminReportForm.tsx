@@ -26,6 +26,8 @@ interface Report {
   peak_height: number | null;
   user_email: string;
   product_image_path: string | null;
+  client_logo_path: string | null;
+  client_website: string | null;
 }
 
 const AdminReportForm = () => {
@@ -35,7 +37,9 @@ const AdminReportForm = () => {
   const [allReports, setAllReports] = useState<Report[]>([]);
   const [selectedReportId, setSelectedReportId] = useState("");
   const [productImage, setProductImage] = useState<File | null>(null);
+  const [clientLogo, setClientLogo] = useState<File | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [showAllReports, setShowAllReports] = useState(false);
   const [formData, setFormData] = useState({
     report_id: "",
@@ -52,7 +56,9 @@ const AdminReportForm = () => {
     peak_area: "",
     peak_height: "",
     user_email: "",
-    product_image_path: ""
+    product_image_path: "",
+    client_logo_path: "",
+    client_website: ""
   });
 
   useEffect(() => {
@@ -120,9 +126,12 @@ const AdminReportForm = () => {
         peak_area: report.peak_area?.toString() || "",
         peak_height: report.peak_height?.toString() || "",
         user_email: report.user_email || "",
-        product_image_path: report.product_image_path || ""
+        product_image_path: report.product_image_path || "",
+        client_logo_path: report.client_logo_path || "",
+        client_website: report.client_website || ""
       });
       setProductImage(null);
+      setClientLogo(null);
     }
   };
 
@@ -133,6 +142,42 @@ const AdminReportForm = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setProductImage(e.target.files[0]);
+    }
+  };
+
+  const handleClientLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setClientLogo(e.target.files[0]);
+    }
+  };
+
+  const uploadClientLogo = async (reportId: string): Promise<string | null> => {
+    if (!clientLogo) return null;
+    
+    setUploadingLogo(true);
+    try {
+      const fileExt = clientLogo.name.split('.').pop();
+      const fileName = `logo-${reportId}.${fileExt}`;
+      
+      const { data, error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, clientLogo, {
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+
+      return urlData?.publicUrl || null;
+    } catch (error: any) {
+      console.error("Error uploading logo:", error);
+      toast.error("Error uploading client logo: " + error.message);
+      return null;
+    } finally {
+      setUploadingLogo(false);
     }
   };
 
@@ -180,8 +225,10 @@ const AdminReportForm = () => {
 
     try {
       const imageUrl = await uploadProductImage(formData.report_id);
+      const logoUrl = await uploadClientLogo(formData.report_id);
       
       console.log("Image URL returned:", imageUrl);
+      console.log("Logo URL returned:", logoUrl);
       console.log("Existing path:", formData.product_image_path);
       
       const updateData: Record<string, any> = {
@@ -199,6 +246,8 @@ const AdminReportForm = () => {
         peak_height: formData.peak_height ? parseFloat(formData.peak_height) : null,
         user_email: formData.user_email,
         product_image_path: imageUrl || formData.product_image_path || null,
+        client_logo_path: logoUrl || formData.client_logo_path || null,
+        client_website: formData.client_website || null,
       };
 
       const { error } = await supabase
@@ -225,10 +274,13 @@ const AdminReportForm = () => {
         peak_area: "",
         peak_height: "",
         user_email: "",
-        product_image_path: ""
+        product_image_path: "",
+        client_logo_path: "",
+        client_website: ""
       });
       setSelectedReportId("");
       setProductImage(null);
+      setClientLogo(null);
       if (showAllReports) {
         loadAllReports();
       } else {
@@ -361,6 +413,39 @@ const AdminReportForm = () => {
                       <div className="space-y-2">
                         <Label htmlFor="batch_lot">Batch / Lot</Label>
                         <Input id="batch_lot" name="batch_lot" value={formData.batch_lot} onChange={handleChange} />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="client_website">Client Website</Label>
+                        <Input id="client_website" name="client_website" value={formData.client_website} onChange={handleChange} placeholder="www.example.com" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Client Logo</Label>
+                        <div className="flex items-center gap-4">
+                          <label className="flex items-center gap-2 cursor-pointer border rounded-lg px-4 py-2 hover:bg-secondary/50 transition-colors">
+                            <Upload className="h-4 w-4" />
+                            <span className="text-sm">
+                              {clientLogo ? clientLogo.name : formData.client_logo_path ? "Change logo" : "Upload logo"}
+                            </span>
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              onChange={handleClientLogoChange} 
+                              className="hidden" 
+                            />
+                          </label>
+                          {(clientLogo || formData.client_logo_path) && (
+                            <span className="text-sm text-green-600">Logo selected</span>
+                          )}
+                        </div>
+                        {uploadingLogo && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Uploading logo...
+                          </div>
+                        )}
                       </div>
                     </div>
 
